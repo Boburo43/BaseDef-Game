@@ -15,6 +15,7 @@ public class GridSystem : MonoBehaviour
     [SerializeField] private Color availableColor = new Color(0.4f, 0.9f, 1f, 0.15f);
 
     private readonly Dictionary<Vector2Int, GridSlot> _slots = new();
+    private readonly Dictionary<Vector2Int, Building> _cells = new();
 
     public float CellSize => cellSize;
     public int SlotSize => slotSize;
@@ -56,21 +57,70 @@ public class GridSystem : MonoBehaviour
         _slots[slotCoord].isUnlocked = true;
     }
 
-    public Vector2Int WorldToSlot(Vector3 world)
+    public bool IsCellUnlocked(Vector2Int cell) =>
+        IsSlotUnlocked(CellToSlot(cell));
+
+    public bool IsCellFree(Vector2Int cell) =>
+        IsCellUnlocked(cell) && !_cells.ContainsKey(cell);
+
+    public Building GetBuilding(Vector2Int cell) =>
+        _cells.TryGetValue(cell, out var b) ? b : null;
+
+    public bool IsAreaFree(Vector2Int origin, Vector2Int size)
+    {
+        for (int x = 0; x < size.x; x++)
+            for (int y = 0; y < size.y; y++)
+                if (!IsCellFree(new Vector2Int(origin.x + x, origin.y + y)))
+                    return false;
+        return true;
+    }
+
+    public bool IsAreaUnlocked(Vector2Int origin, Vector2Int size)
+    {
+        for (int x = 0; x < size.x; x++)
+            for (int y = 0; y < size.y; y++)
+                if (!IsCellUnlocked(new Vector2Int(origin.x + x, origin.y + y)))
+                    return false;
+        return true;
+    }
+
+    public void Occupy(Vector2Int origin, Vector2Int size, Building b)
+    {
+        for (int x = 0; x < size.x; x++)
+            for (int y = 0; y < size.y; y++)
+                _cells[new Vector2Int(origin.x + x, origin.y + y)] = b;
+    }
+
+    public void Free(Vector2Int origin, Vector2Int size)
+    {
+        for (int x = 0; x < size.x; x++)
+            for (int y = 0; y < size.y; y++)
+                _cells.Remove(new Vector2Int(origin.x + x, origin.y + y));
+    }
+
+    public Vector3 CellToWorld(Vector2Int cell) =>
+        Origin + new Vector3((cell.x + 0.5f) * cellSize, 0f, (cell.y + 0.5f) * cellSize);
+
+    public Vector2Int WorldToCell(Vector3 world)
     {
         var local = world - Origin;
         return new Vector2Int(
-            Mathf.FloorToInt(local.x / (slotSize * cellSize)),
-            Mathf.FloorToInt(local.z / (slotSize * cellSize)));
+            Mathf.FloorToInt(local.x / cellSize),
+            Mathf.FloorToInt(local.z / cellSize));
     }
 
-    public Vector3 SlotToWorld(Vector2Int slotCoord)
-    {
-        return Origin + new Vector3(
-            slotCoord.x * slotSize * cellSize,
-            0f,
+    public Vector2Int WorldToSlot(Vector3 world) =>
+        CellToSlot(WorldToCell(world));
+
+    public Vector3 SlotToWorld(Vector2Int slotCoord) =>
+        Origin + new Vector3(
+            slotCoord.x * slotSize * cellSize, 0f,
             slotCoord.y * slotSize * cellSize);
-    }
+
+    private Vector2Int CellToSlot(Vector2Int cell) =>
+        new Vector2Int(
+            Mathf.FloorToInt((float)cell.x / slotSize),
+            Mathf.FloorToInt((float)cell.y / slotSize));
 
 #if UNITY_EDITOR
     void OnDrawGizmos()
