@@ -15,7 +15,7 @@ MonoBehaviour:
   buildingId: Cubr
   displayName: Cube
   prefab: {fileID: 8918548693295625806, guid: 49d36774f58f3e74ca2bfae46dca2cda, type: 3}
-  icon: {fileID: 0}
+  icon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   size: {x: 1, y: 1}
   category: 0
   buildCost: []
