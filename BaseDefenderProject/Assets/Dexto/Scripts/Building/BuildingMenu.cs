@@ -9,24 +9,35 @@ public class BuildingMenuUI : MonoBehaviour
     [SerializeField] private Transform buttonContainer;
     [SerializeField] private GameObject panel;
 
+
+    private void OnEnable()
+    {
+        GameModeManager.OnModeChanged += OnGameModeChanged;
+    }
+
+    private void OnDisable()
+    {
+        GameModeManager.OnModeChanged -= OnGameModeChanged;
+    }
+
     void Start()
     {
         foreach (var data in BuildingRegistry.Instance.GetAll())
             CreateButton(data);
     }
 
-    void Update()
+    private void OnGameModeChanged(GameMode newMode)
     {
-        if (Keyboard.current.bKey.wasPressedThisFrame)
-            panel.SetActive(!panel.activeSelf);
-
-        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        if (newMode == GameMode.Build)
         {
-            BuildingPlacer.Instance.CancelPlacing();
+            panel.SetActive(true);
+        }
+        else
+        {
             panel.SetActive(false);
+            BuildingPlacer.Instance.CancelPlacing();
         }
     }
-
     void CreateButton(BuildingData data)
     {
         var go = Instantiate(buttonPrefab, buttonContainer);
