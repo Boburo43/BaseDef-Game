@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class BuildingMenuUI : MonoBehaviour
@@ -51,7 +50,6 @@ public class BuildingMenuUI : MonoBehaviour
         button.onClick.AddListener(() =>
         {
             BuildingPlacer.Instance.StartPlacing(data);
-            panel.SetActive(false);
         });
     }
 }

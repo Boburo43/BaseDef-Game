@@ -799,6 +799,7 @@ MonoBehaviour:
   slotSize: 8
   maxRadius: 4
   cellSize: 1
+  showGrid: 1
   cellColor: {r: 1, g: 1, b: 1, a: 0.7921569}
   slotBorderColor: {r: 0.4, g: 0.9, b: 1, a: 0.5}
   availableColor: {r: 0.4, g: 0.9, b: 1, a: 0.9098039}

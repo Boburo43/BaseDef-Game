@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class GridSystem : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class GridSystem : MonoBehaviour
     [SerializeField] private float cellSize = 1f;
 
     [Header("Visual Colors")]
+    [SerializeField] private bool showGrid = true;
     [SerializeField] private Color cellColor = new Color(1f, 1f, 1f, 0.12f);
     [SerializeField] private Color slotBorderColor = new Color(0.4f, 0.9f, 1f, 0.5f);
     [SerializeField] private Color availableColor = new Color(0.4f, 0.9f, 1f, 0.15f);
@@ -35,12 +37,29 @@ public class GridSystem : MonoBehaviour
         new( 0,  1), new( 0, -1)
     };
 
+    private void OnEnable()
+    {
+        GameModeManager.OnModeChanged += OnGameModeChanged;
+    }
+
+    private void OnDisable()
+    {
+        GameModeManager.OnModeChanged -= OnGameModeChanged;
+    }
+
+    private void OnGameModeChanged(GameMode newMode)
+    {
+        GetComponent<MeshRenderer>().enabled = newMode == GameMode.Build;
+    }
+
     void Awake()
     {
         Instance = this;
         _meshFilter = GetComponent<MeshFilter>();
         UnlockSlot(Vector2Int.zero);
     }
+
+    
 
     #region Slot Logic
 
@@ -147,7 +166,6 @@ public class GridSystem : MonoBehaviour
         _indices.Clear();
         _colors.Clear();
 
- 
         foreach (var kvp in _slots)
         {
             if (kvp.Value.isUnlocked)
@@ -157,7 +175,6 @@ public class GridSystem : MonoBehaviour
             }
         }
 
-        // 2. Draw Available Neighbors
         HashSet<Vector2Int> checkedAvailable = new HashSet<Vector2Int>();
         foreach (var kvp in _slots)
         {
