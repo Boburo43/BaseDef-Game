@@ -7,22 +7,19 @@ public class BuildingMenuUI : MonoBehaviour
     [SerializeField] private GameObject buttonPrefab;
     [SerializeField] private Transform buttonContainer;
     [SerializeField] private GameObject panel;
+    [SerializeField] private Button expandButton;
 
 
-    private void OnEnable()
-    {
-        GameModeManager.OnModeChanged += OnGameModeChanged;
-    }
+    private void OnEnable() => GameModeManager.OnModeChanged += OnGameModeChanged;
+    private void OnDisable() => GameModeManager.OnModeChanged -= OnGameModeChanged;
 
-    private void OnDisable()
-    {
-        GameModeManager.OnModeChanged -= OnGameModeChanged;
-    }
 
     void Start()
     {
         foreach (var data in BuildingRegistry.Instance.GetAll())
             CreateButton(data);
+
+        expandButton.onClick.AddListener(ToogleExpand);
     }
 
     private void OnGameModeChanged(GameMode newMode)
@@ -51,5 +48,13 @@ public class BuildingMenuUI : MonoBehaviour
         {
             BuildingPlacer.Instance.StartPlacing(data);
         });
+    }
+
+    void ToogleExpand()
+    {
+        GridExpansionManager.Instance.isExpanding = !GridExpansionManager.Instance.isExpanding;
+        expandButton.image.color = GridExpansionManager.Instance.isExpanding ? Color.green : Color.white;
+        Debug.Log("Grid Expansion " + (GridExpansionManager.Instance.isExpanding ? "Enabled" : "Disabled"));
+
     }
 }
