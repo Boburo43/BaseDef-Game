@@ -37,8 +37,11 @@ public class TopDownCharacterController : MonoBehaviour
 
     void Update()
     {
-        HandleMovement();
-        ApplyGravity();
+        if(GameModeManager.Instance.CurrentMode == GameMode.Move)
+        {
+            HandleMovement();
+            ApplyGravity();
+        }
     }
 
     void HandleMovement()
