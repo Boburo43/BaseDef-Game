@@ -1,0 +1,38 @@
+/* The Main Root / Container */
+.console-root {
+    background-color: rgba(20, 20, 20, 0.9);
+    width: 600px;  
+    height: 400px;
+    border-width: 1px;
+    border-color: #444;
+    flex-direction: column; 
+    padding: 2px;
+}
+
+/* The History Box */
+.console-history {
+    flex-grow: 1; /* This tells the history to take all space not used by input */
+    background-color: rgba(10, 10, 10, 0.5);
+    margin-bottom: 2px;
+    color: white;
+}
+
+/* The Text Input at the bottom */
+.console-input {
+    
+    background-color: #111;
+    border-top-width: 1px;
+    border-top-color: #333;
+    color: white;
+    
+}
+.console-input > .unity-text-field__label {
+    display: none;
+}
+
+.console-input > .unity-text-field__input {
+    background-color: transparent;
+    border-width: 0;
+    padding: 0 5px;
+    font-size: 13px;
+}

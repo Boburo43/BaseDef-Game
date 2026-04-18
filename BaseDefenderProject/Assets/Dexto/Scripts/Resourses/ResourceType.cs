@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public enum ResourceType { Wood, Stone }
 
 [System.Serializable]

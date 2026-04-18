@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.InputSystem; // New Input System
+using UnityEngine.InputSystem; 
 
 public class GridExpansionManager : MonoBehaviour
 {
