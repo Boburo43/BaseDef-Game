@@ -5,7 +5,7 @@ public class EnemyGridManager : MonoBehaviour
 {
     public int width = 30;
     public int height = 30;
-    public float cellSize = 1f;
+    [SerializeField] float cellSize = 1f;
     public Vector3 originPosition = Vector3.zero;
 
     public EnemyCell[,] grid;
@@ -52,11 +52,7 @@ public class EnemyGridManager : MonoBehaviour
 
     public Vector3 GridToWorld(int x, int y)
     {
-        return originPosition + new Vector3(
-            x * cellSize + cellSize * 0.5f,
-            0f,
-            y * cellSize + cellSize * 0.5f
-        );
+        return originPosition + new Vector3(x * cellSize + cellSize * 0.5f, 0f, y * cellSize + cellSize * 0.5f);
     }
 
     public void SetWalkable(int x, int y, bool walkable)
